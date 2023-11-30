@@ -1,0 +1,36 @@
+﻿<Window x:Class="LernEinheit4.GameWindow.GameWindow"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:local="clr-namespace:LoginScreen"
+        mc:Ignorable="d" WindowState="Maximized"
+        WindowStyle="None"
+        Height="1200" Width="1920"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <Window.Background>
+        <ImageBrush ImageSource="C:\Users\RAMDAN\OneDrive - zubIT\Bilder\Hintergrund gameboard.jpg"/>
+    </Window.Background>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ContentControl x:Name="Maincontent" Grid.RowSpan="3" Grid.ColumnSpan="3"/>
+        <Grid x:Name="OverlayGrid" Background="#80000000" Visibility="Collapsed">
+            <local:EscapeMenu x:Name="escapeMenu" />
+        </Grid>
+
+    </Grid>
+</Window>
