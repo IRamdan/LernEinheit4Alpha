@@ -35,7 +35,7 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
-            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,100,0,0" Content="New Game" Click="NewGame_Click"/>
+            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,0,0,0" Content="New Game" Click="NewGame_Click"/>
             <StackPanel x:Name="GameButtonsPanel" Height="0">
                 <StackPanel.Resources>
                     <Storyboard x:Key="ExpandAnimation">

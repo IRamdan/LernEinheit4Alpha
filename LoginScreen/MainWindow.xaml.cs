@@ -1,4 +1,5 @@
 ﻿using LernEinheit4.GameWindow;
+using LoginScreen.TicTacToe;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,9 +23,11 @@ namespace LoginScreen
     /// </summary>
     public partial class MainWindow : Window
     {
+        internal List<Player> Players { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            Players = new List<Player>();
         }
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -38,6 +41,17 @@ namespace LoginScreen
         {
             this.WindowState = WindowState.Minimized;
         }
+
+        public Player InitiatePlayer(int p_PlayerIdent, string p_Name, string p_Sign )
+        {
+            Player Player = new Player();
+            Player.PlayerIdent = p_PlayerIdent;
+            Player.Name = p_Name;
+            Player.Sign = p_Sign;
+            return Player;
+
+        }
+
         public void LoginButton_Click(Object sender, RoutedEventArgs e)
         {
             string Username = NicknameTextBox.Text;
@@ -45,12 +59,11 @@ namespace LoginScreen
 
             if (Username == "Ismail" && Password == "1234")
             {
-                GameWindow gameWindow = new GameWindow(Username, Password);
+                Players.Add(InitiatePlayer(1,"Ismail","X"));
+                Players.Add(InitiatePlayer(2, "Guest", "O"));
+                GameWindow gameWindow = new GameWindow(Players);
                 gameWindow.Show();
-            }
-            else
-            {
-                MessageBox.Show("Wrong nickname or password!");
+                this.Close();
             }
         }
 
@@ -66,6 +79,8 @@ namespace LoginScreen
                 MessageBox.Show($"Unable to open link: {ex.Message}");
             }
         }
+
+
 
     }
 }
