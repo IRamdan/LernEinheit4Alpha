@@ -35,7 +35,9 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
-            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,0,0,0" Content="New Game" Click="NewGame_Click"/>
+            <DockPanel>
+                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,0,0,0" Content="New Game" Click="NewGame_Click"/>
+            </DockPanel>
             <StackPanel x:Name="GameButtonsPanel" Height="0">
                 <StackPanel.Resources>
                     <Storyboard x:Key="ExpandAnimation">
@@ -51,19 +53,19 @@
                              From="240" To="0" Duration="0:0:0.5"/>
                     </Storyboard>
                 </StackPanel.Resources>
-                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" Click="TicTacToe_Click" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Content="Tic Tac Toe"/>
-                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" Click="ConnectFour_Click" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Content="Connect Four"/>
+                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" Click="TicTacToe_Click" MouseEnter="Button_MouseEnter" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Content="Tic Tac Toe"/>
+                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" Click="ConnectFour_Click" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Content="Connect Four"/>
             </StackPanel>
-            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="PlayerstatisticsButton_Click" Content="Playerstatistics"/>
-            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="LeaderBoardButton_Click" Content="Leaderboard"/>
-            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="SecondPlayerButton_Click" Content="Login Player 2"/>
+            <local:MainMenuButton Grid.RowSpan="3" FontSize="60" Height="100" Width="500" Click="PlayerstatisticsButton_Click" ButtonContent="Playerstatistics" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ButtonStyle="{DynamicResource MaterialDesignFlatDarkBgButton}"></local:MainMenuButton>
+                <!--<Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="PlayerstatisticsButton_Click" Content="Playerstatistics"/>-->
+                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="LeaderBoardButton_Click" Content="Leaderboard"/>
+                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="SecondPlayerButton_Click" Content="Login Player 2"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2">
             <TextBlock Foreground="White" Background="#007ac1" Margin="0,40,0,0" Width="300" FontSize="42" TextAlignment="Center" Text="Player 2:"/>
             <TextBlock x:Name="Player2NickName" Foreground="White" Background="#007ac1" Margin="0,-1,0,0" Width="300"  FontSize="42" TextAlignment="Center" />
         </StackPanel>
-
 
     </Grid>
 </UserControl>

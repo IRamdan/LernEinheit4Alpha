@@ -1,7 +1,10 @@
 ﻿using FontAwesome.WPF;
 using LoginScreen.ConectFour;
+using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,26 +17,38 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace LoginScreen
 {
-    /// <summary>
-    /// Interaktionslogik für ConnectFourUC.xaml
-    /// </summary>
+    //Todo, animation farben und gewinn tictactoe checken 
     public partial class ConnectFourUC : UserControl
     {
+        private bool IsAnimating = false;
+        public DispatcherTimer Timer;
         public string CurrentPlayer;
-
         public Dictionary<string, Ellipse> GamePieces = new Dictionary<string, Ellipse>();
+        int WinCondition = 4;
+        public int Rows = 6;
+        public int Columns = 7;
+        int FontSize = 80;
+        int GamePieceSideLength = 80;
+        int SelectionButtonSideLength = 80;
+        int SelectedRow { get; set; }
+        int SelectedColumn { get; set; }
+
         public ConnectFourUC()
         {
             InitializeComponent();
             CurrentPlayer = ConnectFourGameMechanics.GetCurrentPlayer();
             DisplayPlayerName();
-            CreateGameBoard();
+            CreateGameBoard(Rows, Columns);
         }
+
         public void DisplayPlayerName()
         {
+            Leftside.Children.Clear();
+            Rightside.Children.Clear();
 
             TextBlock TextBlockPlayer1 = new TextBlock();
             TextBlockPlayer1.Text = "Player 1:";
@@ -68,18 +83,16 @@ namespace LoginScreen
             Rightside.Children.Add(TextBlockPlayer2Name);
         }
 
-        private void CreateGameBoard()
+        private void CreateGameBoard(int p_Row, int p_Column)
         {
-            const int Rows = 6;
-            const int Columns = 7;
 
-            for (int CurrentRow = 0; CurrentRow <= Rows; CurrentRow++)
+            for (int CurrentRow = 0; CurrentRow <= p_Row; CurrentRow++)
             {
                 RowDefinition Row = new();
                 MainGrid.RowDefinitions.Add(Row);
             }
 
-            for (int CurrentColumn = 0; CurrentColumn < Columns; CurrentColumn++)
+            for (int CurrentColumn = 0; CurrentColumn < p_Column; CurrentColumn++)
             {
                 ColumnDefinition Column = new();
                 MainGrid.ColumnDefinitions.Add(Column);
@@ -88,22 +101,22 @@ namespace LoginScreen
             Rectangle GameBoardBackground = new();
             GameBoardBackground.Fill = Brushes.RoyalBlue;
             Grid.SetRow(GameBoardBackground, 1);
-            Grid.SetRowSpan(GameBoardBackground, Rows);
-            Grid.SetColumnSpan(GameBoardBackground, Columns);
+            Grid.SetRowSpan(GameBoardBackground, p_Row);
+            Grid.SetColumnSpan(GameBoardBackground, p_Column);
             MainGrid.Children.Add(GameBoardBackground);
 
-            for (int CurrentRow = 0; CurrentRow <= Rows; CurrentRow++)
+            for (int CurrentRow = 0; CurrentRow <= p_Row; CurrentRow++)
             {
-                for (int CurrentColumn = 0; CurrentColumn < Columns; CurrentColumn++)
+                for (int CurrentColumn = 0; CurrentColumn < p_Column; CurrentColumn++)
                 {
                     if (CurrentRow == 0)
                     {
                         Button SelectionButton = new();
                         SelectionButton.Name = $"SelectionButton_{CurrentRow}_{CurrentColumn}";
                         SelectionButton.Content = new ImageAwesome { Icon = FontAwesomeIcon.LongArrowDown, Height = 50, };
-                        SelectionButton.FontSize = 80;
-                        SelectionButton.Height = 60;
-                        SelectionButton.Width = 80;
+                        SelectionButton.FontSize = FontSize;
+                        SelectionButton.Height = SelectionButtonSideLength;
+                        SelectionButton.Width = SelectionButtonSideLength;
                         SelectionButton.Margin = new Thickness(10);
                         SelectionButton.Background = Brushes.Transparent;
                         SelectionButton.BorderBrush = Brushes.Transparent;
@@ -121,8 +134,8 @@ namespace LoginScreen
                     {
                         Ellipse GamePiece = new();
                         GamePiece.Name = $"GamePiece_{CurrentRow}_{CurrentColumn}";
-                        GamePiece.Width = 80;
-                        GamePiece.Height = 80;
+                        GamePiece.Width = GamePieceSideLength;
+                        GamePiece.Height = GamePieceSideLength;
                         GamePiece.Margin = new Thickness(5);
                         GamePiece.Fill = Brushes.SkyBlue;
 
@@ -148,63 +161,242 @@ namespace LoginScreen
 
         public void SelectionButton_Click(object sender, RoutedEventArgs e)
         {
+            if (IsAnimating)
+                return;
+
+            bool IsWinner = false;
             Button ClickedButton = sender as Button;
             string ButtonName = ClickedButton.Name;
             string[] SplitButtonName = ButtonName.Split("_");
             int Column = int.Parse(SplitButtonName[2]);
 
-            for (int CurrentRow = 6; CurrentRow >= 1; CurrentRow--)
+            for (int CurrentRow = Rows; CurrentRow >= 1; CurrentRow--)
             {
                 string GamePieceName = $"GamePiece_{CurrentRow}_{Column}";
                 if (GamePieces.TryGetValue(GamePieceName, out Ellipse GamePiece))
                 {
-
                     if (GamePiece.Fill == Brushes.SkyBlue)
                     {
-
                         if (CurrentPlayer == "X")
                         {
-                            GamePiece.Fill = Brushes.Red;
-                            CurrentPlayer = ConnectFourGameMechanics.GetCurrentPlayer();
-                            Leftside.Children.Clear();
-                            Rightside.Children.Clear();
-                            DisplayPlayerName();
+                            IsAnimating = true;
+                            AnimatePlacement(GamePiece, Column, CurrentRow, CurrentPlayer);
+                            //IsWinner = CheckForWin(GamePieceName);
+
+                            if (IsWinner)
+                            {
+                                MessageBox.Show($"Spieler {CurrentPlayer} hat gewonnen!");
+                            }
                             break;
                         }
                         else if (CurrentPlayer == "O")
                         {
-                            GamePiece.Fill = Brushes.Yellow;
-                            CurrentPlayer = ConnectFourGameMechanics.GetCurrentPlayer();
-                            Leftside.Children.Clear();
-                            Rightside.Children.Clear();
-                            DisplayPlayerName();
+                            IsAnimating = true;
+                            AnimatePlacement(GamePiece, Column, CurrentRow, CurrentPlayer);
+                            //IsWinner = CheckForWin(ButtonName);
+
+                            if (IsWinner)
+                            {
+                                MessageBox.Show($"Spieler {CurrentPlayer} hat gewonnen!");
+                            }
                             break;
                         }
                     }
                 }
             }
+            CurrentPlayer = ConnectFourGameMechanics.GetCurrentPlayer();
+            DisplayPlayerName();
+
         }
 
-        public void AnimatePlacement(Button p_ClickedButton)
+        private async void AnimatePlacement(Ellipse p_GamePiece, int p_Column, int p_SelectedRow, string p_CurrentPlayer)
         {
-            string ButtonName = p_ClickedButton.Name;
-            string[] SplitButtonName = ButtonName.Split("_");
-            int Row = int.Parse(SplitButtonName[1]);
-            int Column = int.Parse(SplitButtonName[2]);
 
-            GamePiece AnimatedGamePiece = FindName();
-            for (int Counter = 0; Counter < Row; Counter++)
+            for (int Row = 1; Row <= p_SelectedRow; Row++)
             {
-                
+                double Acceleration = 5;
+                double CurrentSpeed = Math.Sqrt(2 * Acceleration * Row );
+                double CurrentTime = CurrentSpeed / Acceleration;
+                double Speed = Math.Sqrt(2 * Acceleration * p_SelectedRow);
+                double Time = Speed / Acceleration;
+                int TimeInterval = (int)((Time - CurrentTime) * 100);
+
+
+                string GamePieceName = $"GamePiece_{Row}_{p_Column}";
+                if (GamePieces.TryGetValue(GamePieceName, out Ellipse AnimatedGamePiece))
+                {
+
+                    if (AnimatedGamePiece.Fill == Brushes.SkyBlue)
+                    {
+                        if (p_CurrentPlayer == "X")
+                        {
+                            AnimatedGamePiece.Fill = Brushes.Red;
+                        }
+                        else if (p_CurrentPlayer == "O")
+                        {
+                            AnimatedGamePiece.Fill = Brushes.Yellow;
+                        }
+
+
+                        await Task.Delay(TimeInterval);
+
+                        AnimatedGamePiece.Fill = Brushes.SkyBlue;
+                    }
+                }
             }
 
+            if (p_CurrentPlayer == "X")
+            {
+                p_GamePiece.Fill = Brushes.Red;
+            }
+            else if (p_CurrentPlayer == "O")
+            {
+                p_GamePiece.Fill = Brushes.Yellow;
+            }
+            IsAnimating = false;
+        }
+
+        //internal bool CheckForWin(string p_ClickedButton)
+        //{
+        //    if (CheckHorizontal(p_ClickedButton) || CheckVertical(p_ClickedButton) || CheckDiagonal(p_ClickedButton) || CheckCounterDiagonal(p_ClickedButton))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
+        internal bool CheckHorizontal(string p_ClickedButton)
+        {
+            int WinConditionCounter = 0;
+            string[] SplitedButtonName = p_ClickedButton.Split('_');
+            for (int CheckCounter = Math.Max(0, SelectedColumn - WinCondition + 1); CheckCounter <= Math.Min(Columns - 1, SelectedColumn + WinCondition - 1); CheckCounter++)
+            {
+                string CheckedButtonName = $"{SplitedButtonName[0]}_{SplitedButtonName[1]}_{CheckCounter}";
+
+                GamePieces.TryGetValue(CheckedButtonName, out Ellipse button);
+
+                if ("X" == CurrentPlayer)
+                {
+                    button.Fill = Brushes.Red;
+                    WinConditionCounter++;
+                    if (WinConditionCounter == WinCondition)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    WinConditionCounter = 0;
+                }
+            }
+            return false;
+        }
+
+        internal bool CheckVertical(string p_ClickedButton)
+        {
+            int WinConditionCounter = 0;
+            string[] SplitedButtonName = p_ClickedButton.Split('_');
+
+            for (int CheckCounter = Math.Max(0, SelectedRow - WinCondition + 1); CheckCounter <= Math.Min(Rows - 1, SelectedRow + WinCondition - 1); CheckCounter++)
+            {
+                string CheckedButtonName = $"{SplitedButtonName[0]}_{CheckCounter}_{SplitedButtonName[2]}";
+                GamePieces.TryGetValue(CheckedButtonName, out Ellipse button);
+
+                if (button.Fill == Brushes.Red)
+                {
+                    WinConditionCounter++;
+                    if (WinConditionCounter == WinCondition)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    WinConditionCounter = 0;
+                }
+            }
+            return false;
+        }
+
+        internal bool CheckDiagonal(string p_ClickedButton)
+        {
+            int WinConditionCounter = 0;
+            string[] SplitedButtonName = p_ClickedButton.Split('_');
+            int RowCheckCounter = SelectedRow;
+            int ColCheckCounter = SelectedColumn;
+
+            while (RowCheckCounter > 0 && ColCheckCounter > 0)
+            {
+                RowCheckCounter--;
+                ColCheckCounter--;
+            }
+
+            while (RowCheckCounter < Rows && ColCheckCounter < Columns)
+            {
+                string CheckedButtonName = $"{SplitedButtonName[0]}_{RowCheckCounter}_{ColCheckCounter}";
+                GamePieces.TryGetValue(CheckedButtonName, out Ellipse button);
+
+                if (button.Fill == Brushes.Red)
+                {
+                    WinConditionCounter++;
+                    if (WinConditionCounter == WinCondition)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    WinConditionCounter = 0;
+                }
+
+                RowCheckCounter++;
+                ColCheckCounter++;
+            }
+            return false;
+        }
+
+        internal bool CheckCounterDiagonal(string p_ClickedButton)
+        {
+            int WinConditionCounter = 0;
+            string[] SplitedButtonName = p_ClickedButton.Split('_');
+            int RowCheckCounter = SelectedRow;
+            int ColCheckCounter = SelectedColumn;
+
+            while (RowCheckCounter < Rows - 1 && ColCheckCounter > 0)
+            {
+                RowCheckCounter++;
+                ColCheckCounter--;
+            }
+
+            while (RowCheckCounter >= 0 && ColCheckCounter < Columns)
+            {
+                string CheckedButtonName = $"{SplitedButtonName[0]}_{RowCheckCounter}_{ColCheckCounter}";
+                GamePieces.TryGetValue(CheckedButtonName, out Ellipse button);
+
+                if (button.Fill == Brushes.Red)
+                {
+                    WinConditionCounter++;
+                    if (WinConditionCounter == WinCondition)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    WinConditionCounter = 0;
+                }
+                RowCheckCounter--;
+                ColCheckCounter++;
+            }
+            return false;
         }
 
         public void RestartButton_Click(object sender, RoutedEventArgs e)
         {
             MainGrid.Children.Clear();
             GamePieces.Clear();
-            CreateGameBoard();
+            CreateGameBoard(Rows, Columns);
+
         }
     }
 }
