@@ -21,7 +21,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-
         <StackPanel x:Name="Leftside" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" ></StackPanel>
         <StackPanel x:Name="Rightside" Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" ></StackPanel>
 

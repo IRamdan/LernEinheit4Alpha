@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,16 +27,17 @@ namespace LoginScreen
         public delegate void ExitGameClicked();
         public event ExitGameClicked OnExitGameClicked;
 
-        public EscapeMenu()
+        public EscapeMenu(UserControl p_CurrentUsercontrol)
         {
             InitializeComponent();
-            SetMenuContent();
+            SetMenuContent(p_CurrentUsercontrol);
         }
 
-        public void SetMenuContent()
+        public void SetMenuContent(UserControl p_CurrentUsercontrol)
         {
             ButtonPanel.Children.Clear();
-            if (false)
+
+            if (p_CurrentUsercontrol.GetType() == typeof(MainMenu))
             {
                 AddButton("Resume", OnResumeGameClicked);
                 AddButton("Leave Game", OnExitGameClicked);
@@ -48,19 +50,33 @@ namespace LoginScreen
             }
         }
 
-        private void AddButton(string content, Delegate eventHandler)
+        private void AddButton(string p_Content, Delegate p_EventHandler)
         {
-            Button button = new Button();
-            button.Content = content;
-            button.Foreground = Brushes.White;
-            button.Height = 50;
-            button.Width = 300;
-            button.FontSize = 24;
-            button.Margin = new Thickness(10);
-            button.Click += (sender, e) => eventHandler.DynamicInvoke(); 
+            Button EscapeButton = new Button();
+            EscapeButton.Content = p_Content;
+            EscapeButton.Foreground = Brushes.White;
+            EscapeButton.Height = 50;
+            EscapeButton.Width = 300;
+            EscapeButton.FontSize = 24;
+            EscapeButton.Margin = new Thickness(10);
 
+            EscapeButton.Click += (sender, e) =>
+            {
+                if (p_Content == "Resume" && OnResumeGameClicked != null)
+                {
+                    OnResumeGameClicked.Invoke();
+                }
+                else if (p_Content == "Back to Main Menu" && OnBackToMainMenuClicked != null)
+                {
+                    OnBackToMainMenuClicked.Invoke();
+                }
+                else if (p_Content == "Leave Game" && OnExitGameClicked != null)
+                {
+                    OnExitGameClicked.Invoke();
+                }
+            };
 
-            ButtonPanel.Children.Add(button);
+            ButtonPanel.Children.Add(EscapeButton);
         }
     }
 }

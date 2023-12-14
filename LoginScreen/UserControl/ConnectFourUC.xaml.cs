@@ -185,6 +185,21 @@ namespace LoginScreen
             }
         }
 
+        public void AnimatePlacement(Button p_ClickedButton)
+        {
+            string ButtonName = p_ClickedButton.Name;
+            string[] SplitButtonName = ButtonName.Split("_");
+            int Row = int.Parse(SplitButtonName[1]);
+            int Column = int.Parse(SplitButtonName[2]);
+
+            GamePiece AnimatedGamePiece = FindName();
+            for (int Counter = 0; Counter < Row; Counter++)
+            {
+                
+            }
+
+        }
+
         public void RestartButton_Click(object sender, RoutedEventArgs e)
         {
             MainGrid.Children.Clear();

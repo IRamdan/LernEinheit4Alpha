@@ -28,8 +28,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ContentControl x:Name="Maincontent" Grid.RowSpan="3" Grid.ColumnSpan="3"/>
-        <Grid x:Name="OverlayGrid" Background="#80000000" Visibility="Collapsed">
-            <local:EscapeMenu x:Name="escapeMenu" />
+        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" x:Name="OverlayGrid" Background="#80000000" Visibility="Collapsed">
+            <ContentControl x:Name="escapeMenu"></ContentControl>
         </Grid>
 
     </Grid>

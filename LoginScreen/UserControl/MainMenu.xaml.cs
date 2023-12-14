@@ -1,5 +1,6 @@
 ﻿using LernEinheit4.GameWindow;
 using LoginScreen;
+using LoginScreen.TicTacToe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,13 @@ namespace LoginScreen
 {
     public partial class MainMenu : UserControl
     {
-        string Player1Nickname { get; set; }
-        string Player2Nickname { get; set; }
+        public List<Player> Players { get; set; }
 
-        public MainMenu(string p_Player1, string p_Player2)
+        public MainMenu(List<Player> p_Players)
         {
             InitializeComponent();
-            DisplayNickName(p_Player1, p_Player2);
+            Players = p_Players;
+            DisplayNickName(Players[0].Name, Players[1].Name);
         }
 
         public void LeaderBoardButton_Click(Object sender, RoutedEventArgs e)
@@ -69,7 +70,7 @@ namespace LoginScreen
             GameWindow window = Window.GetWindow(this) as GameWindow;
             if (window != null)
             {
-                window.LoadControl(new TicTacToeUC("Ismail", "Benjo"));
+                window.LoadControl(new TicTacToeUC(Players));
             }
         }
 
@@ -84,8 +85,7 @@ namespace LoginScreen
 
         private void SecondPlayerButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow LoginScreenSecondPlayer = new MainWindow();
-            LoginScreenSecondPlayer.Show();
+
         }
 
 }
