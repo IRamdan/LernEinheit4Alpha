@@ -35,7 +35,7 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
-            <local:MainMenuButton Click="NewGame_Click" ButtonContent="New Game" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png"></local:MainMenuButton>
+            <local:MainMenuButton Click="NewGame_Click" ButtonContent="New Game" ></local:MainMenuButton>
             <StackPanel x:Name="GameButtonsPanel" Height="0">
                 <StackPanel.Resources>
                     <Storyboard x:Key="ExpandAnimation">
@@ -51,12 +51,12 @@
                              From="180" To="0" Duration="0:0:0.5"/>
                     </Storyboard>
                 </StackPanel.Resources>
-                <local:MainMenuButton Click="TicTacToe_Click" ButtonContent="TicTacToe" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png"></local:MainMenuButton>
-                <local:MainMenuButton Click="ConnectFour_Click" ButtonContent="ConnectFour" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ></local:MainMenuButton>
+                <local:MainMenuButton Click="TicTacToe_Click" ButtonContent="TicTacToe"></local:MainMenuButton>
+                <local:MainMenuButton Click="ConnectFour_Click" ButtonContent="ConnectFour"></local:MainMenuButton>
             </StackPanel>
-            <local:MainMenuButton Click="PlayerstatisticsButton_Click" ButtonContent="Playerstatistics" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png"></local:MainMenuButton>
-            <local:MainMenuButton Click="LeaderBoardButton_Click" ButtonContent="LeaderBoard" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ></local:MainMenuButton>
-            <local:MainMenuButton Click="SecondPlayerButton_Click" ButtonContent="Login Player 2" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ></local:MainMenuButton>    
+            <local:MainMenuButton Click="PlayerstatisticsButton_Click" ButtonContent="Playerstatistics" ></local:MainMenuButton>
+            <local:MainMenuButton Click="LeaderBoardButton_Click" ButtonContent="LeaderBoard" ></local:MainMenuButton>
+            <local:MainMenuButton Click="SecondPlayerButton_Click" ButtonContent="Login Player 2" ></local:MainMenuButton>    
         </StackPanel>
 
         <StackPanel Grid.Column="2">

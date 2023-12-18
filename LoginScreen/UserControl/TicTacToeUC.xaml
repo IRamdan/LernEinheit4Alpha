@@ -26,8 +26,7 @@
         <Grid x:Name="MainGrid" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
         </Grid>
         <StackPanel x:Name="Restart" Grid.Row="2" Grid.Column="1">
-            <Button Margin="0,30,0,0" Width="120" Height="120" Style="{DynamicResource MaterialDesignFlatAccentBgButton}" 
-                    Click="RestartButton_Click">
+            <Button Margin="0,30,0,0" Width="120" Height="120" Click="RestartButton_Click">
                 <fa:FontAwesome Height="60" Width="60" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="RotateRight"/>
             </Button>
         </StackPanel>

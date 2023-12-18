@@ -11,7 +11,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Window.Background>
-        <ImageBrush ImageSource="C:\Users\RAMDAN\Downloads\backgroundepic2.jpg"/>
+        <ImageBrush ImageSource="C:\Users\RAMDAN\Downloads\DALL·E 2023-12-18 12.47.59 - In a cyberpunk cityscape, two robot warriors stand back-to-back in a cartoon style. They are both facing away from the viewer, showcasing their distin.png"/>
     </Window.Background>
 
     <Grid>
