@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -56,11 +57,15 @@ namespace LoginScreen
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            RobotImage.Visibility = Visibility.Visible;
+
+            ButtonBackground.ImageSource = new BitmapImage(new Uri(@"C:\Users\RAMDAN\OneDrive - zubIT\Bilder\NeonButtonOnnew.png"));
+            RobotImage.Visibility = Visibility.Collapsed;
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
+            ButtonBackground.ImageSource = new BitmapImage(new Uri(@"C:\Users\RAMDAN\OneDrive - zubIT\Bilder\NeonButtonOffnew.png"));
+
             RobotImage.Visibility = Visibility.Collapsed;
         }
     }

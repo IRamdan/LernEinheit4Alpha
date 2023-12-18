@@ -35,31 +35,28 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
-            <DockPanel>
-                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,0,0,0" Content="New Game" Click="NewGame_Click"/>
-            </DockPanel>
+            <local:MainMenuButton Click="NewGame_Click" ButtonContent="New Game" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png"></local:MainMenuButton>
             <StackPanel x:Name="GameButtonsPanel" Height="0">
                 <StackPanel.Resources>
                     <Storyboard x:Key="ExpandAnimation">
                         <DoubleAnimation x:Name="ExpandAnimationHeight"
                              Storyboard.TargetName="GameButtonsPanel" 
                              Storyboard.TargetProperty="Height"
-                             From="0" To="240" Duration="0:0:0.5"/>
+                             From="0" To="180" Duration="0:0:0.5"/>
                     </Storyboard>
                     <Storyboard x:Key="CollapseAnimation">
                         <DoubleAnimation x:Name="CollapseAnimationHeight"
                              Storyboard.TargetName="GameButtonsPanel"
                              Storyboard.TargetProperty="Height"
-                             From="240" To="0" Duration="0:0:0.5"/>
+                             From="180" To="0" Duration="0:0:0.5"/>
                     </Storyboard>
                 </StackPanel.Resources>
-                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" Click="TicTacToe_Click" MouseEnter="Button_MouseEnter" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Content="Tic Tac Toe"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" Click="ConnectFour_Click" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Content="Connect Four"/>
+                <local:MainMenuButton Click="TicTacToe_Click" ButtonContent="TicTacToe" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png"></local:MainMenuButton>
+                <local:MainMenuButton Click="ConnectFour_Click" ButtonContent="ConnectFour" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ></local:MainMenuButton>
             </StackPanel>
-            <local:MainMenuButton Grid.RowSpan="3" FontSize="60" Height="100" Width="500" Click="PlayerstatisticsButton_Click" ButtonContent="Playerstatistics" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ButtonStyle="{DynamicResource MaterialDesignFlatDarkBgButton}"></local:MainMenuButton>
-                <!--<Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="PlayerstatisticsButton_Click" Content="Playerstatistics"/>-->
-                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="LeaderBoardButton_Click" Content="Leaderboard"/>
-                <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}" FontSize="60" Height="100" Width="500" Margin="0,20,0,0" Click="SecondPlayerButton_Click" Content="Login Player 2"/>
+            <local:MainMenuButton Click="PlayerstatisticsButton_Click" ButtonContent="Playerstatistics" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png"></local:MainMenuButton>
+            <local:MainMenuButton Click="LeaderBoardButton_Click" ButtonContent="LeaderBoard" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ></local:MainMenuButton>
+            <local:MainMenuButton Click="SecondPlayerButton_Click" ButtonContent="Login Player 2" ImageSource="C:\Users\RAMDAN\Downloads\HoverImageRobot.png" ></local:MainMenuButton>    
         </StackPanel>
 
         <StackPanel Grid.Column="2">

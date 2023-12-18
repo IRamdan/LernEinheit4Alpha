@@ -24,11 +24,11 @@ namespace LoginScreen
         internal Player CurrentPlayer { get; set; }
         internal Player Winner { get; set; }
         internal GameState GameStatus { get; set; }
-        internal int Row = 3;
-        internal int Column = 3;
+        internal int Row = 10;
+        internal int Column = 22;
         internal int SelectedRow { get; set; }
         internal int SelectedColumn { get; set; }
-        internal int WinCondition { get; set; } = 3;
+        internal int WinCondition { get; set; } = 5;
         internal int RoundCounter { get; set; } = 0;
         //public List<GamePiece> GamePieces = new List<GamePiece>();
         public TicTacToeUC(List<Player> p_Players)
@@ -152,7 +152,7 @@ namespace LoginScreen
             MainGrid.Children.Clear();
             ButtonDictionary.Clear();
             CreateGameBoard(Row,Column);
-            RoundCounter = 1;
+            RoundCounter = 0;
         }
 
 

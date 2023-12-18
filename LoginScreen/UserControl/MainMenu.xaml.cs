@@ -87,10 +87,5 @@ namespace LoginScreen
         {
 
         }
-
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
-        {
-            
-        }
     }
 }
