@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace LoginScreen
 {
@@ -14,43 +15,43 @@ namespace LoginScreen
     {
         public class CheckWinParameters
         {
-            public Dictionary<string, Button> ButtonDictionary { get; set; }
-            public Player CurrentPlayer { get; set; }
-            public string ClickedButton { get; set; }
-            public int SelectedColumn { get; set; }
-            public int SelectedRow { get; set; }
-            public int WinCondition { get; set; }
-            public int GameFieldRows { get; set; }
-            public int GameFieldColumns { get; set; }
+            public List<Player> p_Players { get; set; }
+            public Dictionary<string, Button> p_ButtonDictionary { get; set; }
+            public Player p_CurrentPlayer { get; set; }
+            public string p_ClickedButton { get; set; }
+            public int p_SelectedColumn { get; set; }
+            public int p_SelectedRow { get; set; }
+            public int p_WinCondition { get; set; }
+            public int p_GameFieldRows { get; set; }
+            public int p_GameFieldColumns { get; set; }
         }
 
 
-        private static int PlayerDeterminer = 0;
-        public List<Player> Players = new List<Player>();
         public Player Winner { get; set; }
         internal GameState GameStatus { get; set; }
         internal int RoundCounter { get; set; } = 0;
 
-        internal Player GetStartingPlayer()
+        internal static Player GetStartingPlayer(CheckWinParameters p_Parameters)
         {
             Random PlayerRandomizer = new Random();
-            return Players[PlayerRandomizer.Next(Players.Count)];
+            return p_Parameters.p_Players[PlayerRandomizer.Next(p_Parameters.p_Players.Count)];
         }
 
-        internal void CurrentPlayerDeterminer(CheckWinParameters p_Parameters)
+        internal static Player CurrentPlayerDeterminer(CheckWinParameters p_Parameters)
         {
-            if (p_Parameters.CurrentPlayer == null)
+            if (p_Parameters.p_CurrentPlayer == null)
             {
-                p_Parameters.CurrentPlayer = GetStartingPlayer();
+                p_Parameters.p_CurrentPlayer = GetStartingPlayer(p_Parameters);
             }
             else
             {
-                int NextPlayerIndex = Players.IndexOf(p_Parameters.CurrentPlayer) + 1;
-
-                if (NextPlayerIndex > Players.Count - 1)
+                int NextPlayerIndex = p_Parameters.p_Players.IndexOf(p_Parameters.p_CurrentPlayer) + 1;
+                                                   
+                if (NextPlayerIndex > p_Parameters.p_Players.Count - 1)
                     NextPlayerIndex = 0;
-                p_Parameters.CurrentPlayer = Players[NextPlayerIndex];
+                p_Parameters.p_CurrentPlayer = p_Parameters.p_Players[NextPlayerIndex];
             }
+            return p_Parameters.p_CurrentPlayer;
         }
 
         internal static bool CheckForWin(CheckWinParameters p_Parameters)
@@ -65,16 +66,16 @@ namespace LoginScreen
         internal static bool CheckHorizontal(CheckWinParameters p_Parameters)
         {
             int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_Parameters.ClickedButton.Split('_');
-            for (int CheckCounter = Math.Max(0, p_Parameters.SelectedColumn - p_Parameters.WinCondition + 1); CheckCounter <= Math.Min(p_Parameters.GameFieldColumns - 1, p_Parameters.SelectedColumn + p_Parameters.WinCondition - 1); CheckCounter++)
+            string[] SplitedButtonName = p_Parameters.p_ClickedButton.Split('_');
+            for (int CheckCounter = Math.Max(0, p_Parameters.p_SelectedColumn - p_Parameters.p_WinCondition + 1); CheckCounter <= Math.Min(p_Parameters.p_GameFieldColumns - 1, p_Parameters.p_SelectedColumn + p_Parameters.p_WinCondition - 1); CheckCounter++)
             {
                 string CheckedButtonName = $"{SplitedButtonName[0]}_{SplitedButtonName[1]}_{CheckCounter}";
-                p_Parameters.ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
+                p_Parameters.p_ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
 
-                if (button.Content == p_Parameters.CurrentPlayer.Sign)
+                if (button.Content == p_Parameters.p_CurrentPlayer.Sign)
                 {
                     WinConditionCounter++;
-                    if (WinConditionCounter == p_Parameters.WinCondition)
+                    if (WinConditionCounter == p_Parameters.p_WinCondition)
                     {
                         return true;
                     }
@@ -90,17 +91,17 @@ namespace LoginScreen
         internal static bool CheckVertical(CheckWinParameters p_Parameters)
         {
             int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_Parameters.ClickedButton.Split('_');
+            string[] SplitedButtonName = p_Parameters.p_ClickedButton.Split('_');
 
-            for (int CheckCounter = Math.Max(0, p_Parameters.SelectedRow - p_Parameters.WinCondition + 1); CheckCounter <= Math.Min(p_Parameters.GameFieldRows - 1, p_Parameters.SelectedRow + p_Parameters.WinCondition - 1); CheckCounter++)
+            for (int CheckCounter = Math.Max(0, p_Parameters.p_SelectedColumn - p_Parameters.p_WinCondition + 1); CheckCounter <= Math.Min(p_Parameters.p_GameFieldColumns - 1, p_Parameters.p_SelectedColumn + p_Parameters.p_WinCondition - 1); CheckCounter++)
             {
                 string CheckedButtonName = $"{SplitedButtonName[0]}_{CheckCounter}_{SplitedButtonName[2]}";
-                p_Parameters.ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
+                p_Parameters.p_ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
 
-                if (button.Content == p_Parameters.CurrentPlayer.Sign)
+                if (button.Content == p_Parameters.p_CurrentPlayer.Sign)
                 {
                     WinConditionCounter++;
-                    if (WinConditionCounter == p_Parameters.WinCondition)
+                    if (WinConditionCounter == p_Parameters.p_WinCondition)
                     {
                         return true;
                     }
@@ -116,9 +117,9 @@ namespace LoginScreen
         internal static bool CheckDiagonal(CheckWinParameters p_Parameters)
         {
             int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_Parameters.ClickedButton.Split('_');
-            int RowCheckCounter = p_Parameters.SelectedRow;
-            int ColCheckCounter = p_Parameters.SelectedColumn;
+            string[] SplitedButtonName = p_Parameters.p_ClickedButton.Split('_');
+            int RowCheckCounter = p_Parameters.p_SelectedRow;
+            int ColCheckCounter = p_Parameters.p_SelectedColumn;
 
             while (RowCheckCounter > 0 && ColCheckCounter > 0)
             {
@@ -126,15 +127,15 @@ namespace LoginScreen
                 ColCheckCounter--;
             }
 
-            while (RowCheckCounter < p_Parameters.GameFieldRows && ColCheckCounter < p_Parameters.GameFieldColumns)
+            while (RowCheckCounter < p_Parameters.p_GameFieldRows && ColCheckCounter < p_Parameters.p_GameFieldColumns)
             {
                 string CheckedButtonName = $"{SplitedButtonName[0]}_{RowCheckCounter}_{ColCheckCounter}";
-                p_Parameters.ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
+                p_Parameters.p_ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
 
-                if (button.Content == p_Parameters.CurrentPlayer.Sign)
+                if (button.Content == p_Parameters.p_CurrentPlayer.Sign)
                 {
                     WinConditionCounter++;
-                    if (WinConditionCounter == p_Parameters.WinCondition)
+                    if (WinConditionCounter == p_Parameters.p_WinCondition)
                     {
                         return true;
                     }
@@ -153,25 +154,25 @@ namespace LoginScreen
         internal static bool CheckCounterDiagonal(CheckWinParameters p_Parameters)
         {
             int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_Parameters.ClickedButton.Split('_');
-            int RowCheckCounter = p_Parameters.SelectedRow;
-            int ColCheckCounter = p_Parameters.SelectedColumn;
+            string[] SplitedButtonName = p_Parameters.p_ClickedButton.Split('_');
+            int RowCheckCounter = p_Parameters.p_SelectedRow;
+            int ColCheckCounter = p_Parameters.p_SelectedColumn;
 
-            while (RowCheckCounter < p_Parameters.GameFieldRows - 1 && ColCheckCounter > 0)
+            while (RowCheckCounter < p_Parameters.p_GameFieldRows - 1 && ColCheckCounter > 0)
             {
                 RowCheckCounter++;
                 ColCheckCounter--;
             }
 
-            while (RowCheckCounter >= 0 && ColCheckCounter < p_Parameters.GameFieldColumns)
+            while (RowCheckCounter >= 0 && ColCheckCounter < p_Parameters.p_GameFieldColumns)
             {
                 string CheckedButtonName = $"{SplitedButtonName[0]}_{RowCheckCounter}_{ColCheckCounter}";
-                p_Parameters.ButtonDictionary.TryGetValue(CheckedButtonName, out Button CheckedButton);
+                p_Parameters.p_ButtonDictionary.TryGetValue(CheckedButtonName, out Button CheckedButton);
 
-                if (CheckedButton.Content == p_Parameters.CurrentPlayer.Sign)
+                if (CheckedButton.Content == p_Parameters.p_CurrentPlayer.Sign)
                 {
                     WinConditionCounter++;
-                    if (WinConditionCounter == p_Parameters.WinCondition)
+                    if (WinConditionCounter == p_Parameters.p_WinCondition)
                     {
                         return true;
                     }

@@ -19,25 +19,30 @@ namespace LoginScreen
 {
     public partial class TicTacToeUC : UserControl
     {
-        internal List<Player> Players { get; set; }
-        internal Dictionary<string, Button> ButtonDictionary = new Dictionary<string, Button>();
-        internal Player CurrentPlayer { get; set; }
-        internal Player Winner { get; set; }
+
+
+        public List<Player> Players { get; set; }
+        public Dictionary<string, Button> ButtonDictionary = new Dictionary<string, Button>();
+        public Player CurrentPlayer { get; set; }
+        public Player Winner { get; set; }
         internal GameState GameStatus { get; set; }
-        internal int Row = 10;
-        internal int Column = 22;
+        public int GameFieldRows = 3;
+        public int GameFieldColumns = 3;
         internal int SelectedRow { get; set; }
         internal int SelectedColumn { get; set; }
-        internal int WinCondition { get; set; } = 5;
+        internal int WinCondition { get; set; } = 3;
         internal int RoundCounter { get; set; } = 0;
-        //public List<GamePiece> GamePieces = new List<GamePiece>();
+
+        TicTacToeGameMechanics.CheckWinParameters Parameters = new TicTacToeGameMechanics.CheckWinParameters();
+
         public TicTacToeUC(List<Player> p_Players)
         {
             InitializeComponent();
             Players = p_Players;
-            CurrentPlayer = GetStartingPlayer();
+            Parameters.p_Players = Players;
+            CurrentPlayer = TicTacToeGameMechanics.GetStartingPlayer(Parameters);
             DisplayPlayerName();
-            CreateGameBoard(Row, Column);
+            CreateGameBoard(GameFieldRows, GameFieldColumns);
         }
 
         public void DisplayPlayerName()
@@ -107,7 +112,6 @@ namespace LoginScreen
 
         public void Cell_Click(object sender, RoutedEventArgs e)
         {
-            bool IsWinner;
             Button ClickedButton = sender as Button;
             string ButtonName = ClickedButton.Name;
             string[] SplitName = ButtonName.Split("_");
@@ -116,12 +120,21 @@ namespace LoginScreen
 
             if (ClickedButton.Content == "")
             {
+                Parameters.p_ButtonDictionary = ButtonDictionary;
+                Parameters.p_CurrentPlayer = CurrentPlayer;
+                Parameters.p_ClickedButton = ButtonName;
+                Parameters.p_SelectedColumn = SelectedColumn;
+                Parameters.p_SelectedRow = SelectedRow;
+                Parameters.p_WinCondition = WinCondition;
+                Parameters.p_GameFieldRows = GameFieldRows;
+                Parameters.p_GameFieldColumns = GameFieldColumns;
+
                 string Sign = CurrentPlayer.Sign;
                 ClickedButton.Content = Sign;
                 ClickedButton.IsEnabled = false;
                 Leftside.Children.Clear();
                 Rightside.Children.Clear();
-                IsWinner = CheckForWin(ButtonName);
+                bool IsWinner = TicTacToeGameMechanics.CheckForWin(Parameters);
                 RoundCounter++;
 
                 if (IsWinner)
@@ -129,19 +142,19 @@ namespace LoginScreen
                     MessageBox.Show($"Spieler {CurrentPlayer.Name} hat gewonnen!");
                     MainGrid.Children.Clear();
                     ButtonDictionary.Clear();
-                    CreateGameBoard(Row, Column);
+                    CreateGameBoard(GameFieldRows, GameFieldColumns);
                     RoundCounter = 0;
                 }
-                else if (RoundCounter == (Row *  Column))
+                else if (RoundCounter == (GameFieldRows * GameFieldColumns))
                 {
                     MessageBox.Show($"Unentschieden");
                     MainGrid.Children.Clear();
                     ButtonDictionary.Clear();
-                    CreateGameBoard(Row, Column);
+                    CreateGameBoard(GameFieldRows, GameFieldColumns);
                     RoundCounter = 0;
                 }
 
-                CurrentPlayerDeterminer();
+                CurrentPlayer = TicTacToeGameMechanics.CurrentPlayerDeterminer(Parameters);
                 DisplayPlayerName();
             }
 
@@ -151,169 +164,9 @@ namespace LoginScreen
         {
             MainGrid.Children.Clear();
             ButtonDictionary.Clear();
-            CreateGameBoard(Row,Column);
+            CreateGameBoard(GameFieldRows, GameFieldColumns);
+            CurrentPlayer = TicTacToeGameMechanics.GetStartingPlayer(Parameters);
             RoundCounter = 0;
         }
-
-
-
-        internal Player GetStartingPlayer()
-        {
-            Random PlayerRandomizer = new Random();
-            return Players[PlayerRandomizer.Next(Players.Count)];
-        }
-
-        internal void CurrentPlayerDeterminer()
-        {
-            if (CurrentPlayer == null)
-            {
-                CurrentPlayer = GetStartingPlayer();
-            }
-            else
-            {
-                int NextPlayerIndex = Players.IndexOf(CurrentPlayer) + 1;
-
-                if (NextPlayerIndex > Players.Count - 1)
-                    NextPlayerIndex = 0;
-                CurrentPlayer = Players[NextPlayerIndex];
-            }
-        }
-
-        internal bool CheckForWin(string p_ClickedButton)
-        {
-            if (CheckHorizontal(p_ClickedButton) || CheckVertical(p_ClickedButton) || CheckDiagonal(p_ClickedButton) || CheckCounterDiagonal(p_ClickedButton))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        internal bool CheckHorizontal(string p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_ClickedButton.Split('_');
-
-            
-            for (int CheckCounter = Math.Max(0, SelectedColumn - WinCondition + 1);CheckCounter <= Math.Min(Column - 1, SelectedColumn + WinCondition - 1); CheckCounter++)
-            {
-                string CheckedButtonName = $"{SplitedButtonName[0]}_{SplitedButtonName[1]}_{CheckCounter}";
-                
-                ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
-
-                if (button.Content == CurrentPlayer.Sign)
-                {
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-            }
-            return false;
-        }
-
-        internal bool CheckVertical(string p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_ClickedButton.Split('_');
-
-            for (int CheckCounter = Math.Max(0, SelectedRow - WinCondition + 1); CheckCounter <= Math.Min(Row - 1, SelectedRow + WinCondition - 1); CheckCounter++)
-            {
-                string CheckedButtonName = $"{SplitedButtonName[0]}_{CheckCounter}_{SplitedButtonName[2]}";
-                ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
-
-                if (button.Content == CurrentPlayer.Sign)
-                {
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-            }
-            return false;
-        }
-
-        internal bool CheckDiagonal(string p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_ClickedButton.Split('_');
-            int RowCheckCounter = SelectedRow;
-            int ColCheckCounter = SelectedColumn;
-
-            while (RowCheckCounter > 0 && ColCheckCounter > 0)
-            {
-                RowCheckCounter--;
-                ColCheckCounter--;
-            }
-
-            while (RowCheckCounter < Row && ColCheckCounter < Column)
-            {
-                string CheckedButtonName = $"{SplitedButtonName[0]}_{RowCheckCounter}_{ColCheckCounter}";
-                ButtonDictionary.TryGetValue(CheckedButtonName, out Button button);
-
-                if (button.Content == CurrentPlayer.Sign)
-                {
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-
-                RowCheckCounter++;
-                ColCheckCounter++;
-            }
-            return false;
-        }
-
-        internal bool CheckCounterDiagonal(string p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            string[] SplitedButtonName = p_ClickedButton.Split('_');
-            int RowCheckCounter = SelectedRow;
-            int ColCheckCounter = SelectedColumn;
-
-            while (RowCheckCounter < Row - 1 && ColCheckCounter > 0)
-            {
-                RowCheckCounter++;
-                ColCheckCounter--;
-            }
-
-            while (RowCheckCounter >= 0 && ColCheckCounter < Column)
-            {
-                string CheckedButtonName = $"{SplitedButtonName[0]}_{RowCheckCounter}_{ColCheckCounter}";
-                ButtonDictionary.TryGetValue(CheckedButtonName, out Button CheckedButton);
-
-                if (CheckedButton.Content == CurrentPlayer.Sign)
-                {
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-                RowCheckCounter--;
-                ColCheckCounter++;
-            }
-            return false;
-        }
-
     }
 }
