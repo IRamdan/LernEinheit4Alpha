@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="LoginScreen.MainMenuButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LoginScreen"
+             MouseEnter="UserControl_MouseEnter"
+             MouseLeave="UserControl_MouseLeave">
+    <DockPanel>
+        <Border>
+            <Button x:Name="MainButton" Margin="0,10,0,0"  Height="80" Width="450" >
+                <Button.Background>
+                    <ImageBrush x:Name="ButtonBackground" ImageSource="C:\Users\RAMDAN\OneDrive - zubIT\Bilder\NeonButtonOffnew.png"></ImageBrush>
+                </Button.Background>
+                <Button.Content>
+                    <TextBlock Style="{DynamicResource NeonTextStyleOn}" FontSize="40" Text="{Binding ButtonContent, RelativeSource={RelativeSource AncestorType={x:Type local:MainMenuButton}}}"/>
+                </Button.Content>
+            </Button>
+        </Border>
+        <Image x:Name="RobotImage" Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType={x:Type local:MainMenuButton}}}" Height="50" Visibility="Collapsed" />
+    </DockPanel>
+</UserControl>

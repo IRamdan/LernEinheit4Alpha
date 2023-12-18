@@ -19,24 +19,30 @@ namespace LoginScreen
 {
     public partial class TicTacToeUC : UserControl
     {
-        internal List<Player> Players { get; set; }
-        internal Player CurrentPlayer { get; set; }
-        internal Player Winner { get; set; }
+
+
+        public List<Player> Players { get; set; }
+        public Dictionary<string, Button> ButtonDictionary = new Dictionary<string, Button>();
+        public Player CurrentPlayer { get; set; }
+        public Player Winner { get; set; }
         internal GameState GameStatus { get; set; }
-        internal int Row { get; set; }
-        internal int Column { get; set; }
+        public int GameFieldRows = 3;
+        public int GameFieldColumns = 3;
         internal int SelectedRow { get; set; }
         internal int SelectedColumn { get; set; }
         internal int WinCondition { get; set; } = 3;
-        internal int RoundCounter = 0;
-        //public List<GamePiece> GamePieces = new List<GamePiece>();
+        internal int RoundCounter { get; set; } = 0;
+
+        TicTacToeGameMechanics.CheckWinParameters Parameters = new TicTacToeGameMechanics.CheckWinParameters();
+
         public TicTacToeUC(List<Player> p_Players)
         {
             InitializeComponent();
             Players = p_Players;
-            CurrentPlayer = GetStartingPlayer();
+            Parameters.p_Players = Players;
+            CurrentPlayer = TicTacToeGameMechanics.GetStartingPlayer(Parameters);
             DisplayPlayerName();
-            CreateGameBoard();
+            CreateGameBoard(GameFieldRows, GameFieldColumns);
         }
 
         public void DisplayPlayerName()
@@ -62,25 +68,23 @@ namespace LoginScreen
             return textBlock;
         }
 
-        private void CreateGameBoard()
+        private void CreateGameBoard(int p_Rows, int p_Columns)
         {
-            const int Rows = 3;
-            const int Columns = 3;
 
             Grid GameBoardTicTacToe = new();
 
             Rectangle GameBoardBackground = new Rectangle();
             GameBoardBackground.Fill = Brushes.SkyBlue;
-            Grid.SetRowSpan(GameBoardBackground, Rows);
-            Grid.SetColumnSpan(GameBoardBackground, Columns);
+            Grid.SetRowSpan(GameBoardBackground, p_Rows);
+            Grid.SetColumnSpan(GameBoardBackground, p_Columns);
             GameBoardTicTacToe.Children.Add(GameBoardBackground);
 
-            for (int CurrentRow = 0; CurrentRow < Rows; CurrentRow++)
+            for (int CurrentRow = 0; CurrentRow < p_Rows; CurrentRow++)
             {
                 RowDefinition Row = new RowDefinition();
                 GameBoardTicTacToe.RowDefinitions.Add(Row);
 
-                for (int CurrentColumn = 0; CurrentColumn < Columns; CurrentColumn++)
+                for (int CurrentColumn = 0; CurrentColumn < p_Columns; CurrentColumn++)
                 {
                     ColumnDefinition Column = new ColumnDefinition();
                     GameBoardTicTacToe.ColumnDefinitions.Add(Column);
@@ -88,17 +92,18 @@ namespace LoginScreen
                     Button Cell = new Button();
                     Cell.Name = $"Button_{CurrentRow}_{CurrentColumn}";
                     Cell.Content = "";
-                    Cell.FontSize = 300 / Rows;
+                    Cell.FontSize = 300 / p_Rows;
                     Cell.Style = (Style)FindResource("MaterialDesignRaisedSecondaryLightButton");
                     Cell.HorizontalAlignment = HorizontalAlignment.Center;
                     Cell.VerticalAlignment = VerticalAlignment.Top;
-                    Cell.Height = 500 / Rows;
-                    Cell.Width = 500 / Rows;
+                    Cell.Height = 500 / p_Rows;
+                    Cell.Width = 500 / p_Rows;
                     Cell.Margin = new Thickness(4);
                     Cell.Click += Cell_Click;
 
                     Grid.SetRow(Cell, CurrentRow);
                     Grid.SetColumn(Cell, CurrentColumn);
+                    ButtonDictionary.Add(Cell.Name, Cell);
                     GameBoardTicTacToe.Children.Add(Cell);
                 }
             }
@@ -107,33 +112,50 @@ namespace LoginScreen
 
         public void Cell_Click(object sender, RoutedEventArgs e)
         {
-            bool IsWinner;
             Button ClickedButton = sender as Button;
             string ButtonName = ClickedButton.Name;
             string[] SplitName = ButtonName.Split("_");
-            int Row = Convert.ToInt32(SplitName[1]);
-            int Column = Convert.ToInt32(SplitName[2]);
+            SelectedRow = Convert.ToInt32(SplitName[1]);
+            SelectedColumn = Convert.ToInt32(SplitName[2]);
 
             if (ClickedButton.Content == "")
             {
+                Parameters.p_ButtonDictionary = ButtonDictionary;
+                Parameters.p_CurrentPlayer = CurrentPlayer;
+                Parameters.p_ClickedButton = ButtonName;
+                Parameters.p_SelectedColumn = SelectedColumn;
+                Parameters.p_SelectedRow = SelectedRow;
+                Parameters.p_WinCondition = WinCondition;
+                Parameters.p_GameFieldRows = GameFieldRows;
+                Parameters.p_GameFieldColumns = GameFieldColumns;
+
                 string Sign = CurrentPlayer.Sign;
                 ClickedButton.Content = Sign;
                 ClickedButton.IsEnabled = false;
                 Leftside.Children.Clear();
                 Rightside.Children.Clear();
-                DisplayPlayerName();
-                CurrentPlayerDeterminer();
-
-
-                SelectedRow = Row;
-                SelectedColumn = Column;
-
-                IsWinner = CheckForWin(ClickedButton);
+                bool IsWinner = TicTacToeGameMechanics.CheckForWin(Parameters);
+                RoundCounter++;
 
                 if (IsWinner)
                 {
                     MessageBox.Show($"Spieler {CurrentPlayer.Name} hat gewonnen!");
+                    MainGrid.Children.Clear();
+                    ButtonDictionary.Clear();
+                    CreateGameBoard(GameFieldRows, GameFieldColumns);
+                    RoundCounter = 0;
                 }
+                else if (RoundCounter == (GameFieldRows * GameFieldColumns))
+                {
+                    MessageBox.Show($"Unentschieden");
+                    MainGrid.Children.Clear();
+                    ButtonDictionary.Clear();
+                    CreateGameBoard(GameFieldRows, GameFieldColumns);
+                    RoundCounter = 0;
+                }
+
+                CurrentPlayer = TicTacToeGameMechanics.CurrentPlayerDeterminer(Parameters);
+                DisplayPlayerName();
             }
 
         }
@@ -141,168 +163,10 @@ namespace LoginScreen
         public void RestartButton_Click(object sender, RoutedEventArgs e)
         {
             MainGrid.Children.Clear();
-            CreateGameBoard();
+            ButtonDictionary.Clear();
+            CreateGameBoard(GameFieldRows, GameFieldColumns);
+            CurrentPlayer = TicTacToeGameMechanics.GetStartingPlayer(Parameters);
+            RoundCounter = 0;
         }
-
-
-
-        internal Player GetStartingPlayer()
-        {
-            Random PlayerRandomizer = new Random();
-            return Players[PlayerRandomizer.Next(Players.Count)];
-        }
-
-        internal void CurrentPlayerDeterminer()
-        {
-            if (CurrentPlayer == null)
-            {
-                CurrentPlayer = GetStartingPlayer();
-            }
-            else
-            {
-                int NextPlayerIndex = Players.IndexOf(CurrentPlayer) + 1;
-
-                if (NextPlayerIndex > Players.Count - 1)
-                    NextPlayerIndex = 0;
-                CurrentPlayer = Players[NextPlayerIndex];
-            }
-        }
-
-        internal bool CheckForWin(Button p_ClickedButton)
-        {
-            if (CheckHorizontal(p_ClickedButton) || CheckVertical(p_ClickedButton) || CheckDiagonal(p_ClickedButton) || CheckCounterDiagonal(p_ClickedButton))
-            {
-                MessageBox.Show("Du hast gewonnen");
-                return true;
-            }
-            return false;
-        }
-
-        internal bool CheckHorizontal(Button p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            int CheckCounter = Math.Max(0, SelectedColumn - WinCondition + 1);
-            int MinColumn = Math.Min(Column - 1, SelectedColumn + WinCondition - 1);
-            MessageBox.Show($"CheckCounter{CheckCounter}, MaxColumn{MinColumn}, Row{SelectedRow}, Column{SelectedColumn}");
-            for (; CheckCounter <= MinColumn; CheckCounter++)
-            {
-                string CheckedButtonName = $"Button_{SelectedRow}_{CheckCounter}";
-                MessageBox.Show("BIN in for schleife");
-                Button CheckedButton = MainGrid.FindName(CheckedButtonName) as Button;
-
-                if (CheckedButton != null && CheckedButton.Content.ToString() == p_ClickedButton.Content.ToString())
-                {
-                    MessageBox.Show("bIN IN IF SCHLEIFE");
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-            }
-            return false;
-
-        }
-
-        internal bool CheckVertical(Button p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            for (int CheckCounter = Math.Max(0, SelectedRow - WinCondition + 1); CheckCounter <= Math.Min(Row - 1, SelectedRow + WinCondition - 1); CheckCounter++)
-            {
-                string CheckedButtonName = $"Button_{SelectedRow}_{CheckCounter}";
-                Button CheckedButton = MainGrid.FindName(CheckedButtonName) as Button;
-
-                if (CheckedButton.Content == p_ClickedButton.Content)
-                {
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-            }
-            return false;
-        }
-
-        internal bool CheckDiagonal(Button p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            int RowCheckCounter = SelectedRow;
-            int ColCheckCounter = SelectedColumn;
-
-            while (RowCheckCounter > 0 && ColCheckCounter > 0)
-            {
-                RowCheckCounter--;
-                ColCheckCounter--;
-            }
-
-            while (RowCheckCounter < Row && ColCheckCounter < Column)
-            {
-                string CheckedButtonName = $"Button_{RowCheckCounter}_{ColCheckCounter}";
-                Button CheckedButton = MainGrid.FindName(CheckedButtonName) as Button;
-
-                if (CheckedButton.Content == p_ClickedButton.Content)
-                {
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-
-                RowCheckCounter++;
-                ColCheckCounter++;
-            }
-            return false;
-        }
-
-        internal bool CheckCounterDiagonal(Button p_ClickedButton)
-        {
-            int WinConditionCounter = 0;
-            int RowCheckCounter = SelectedRow;
-            int ColCheckCounter = SelectedColumn;
-
-            while (RowCheckCounter < Row - 1 && ColCheckCounter > 0)
-            {
-                RowCheckCounter++;
-                ColCheckCounter--;
-            }
-
-            while (RowCheckCounter >= 0 && ColCheckCounter < Column)
-            {
-                string CheckedButtonName = $"Button_{RowCheckCounter}_{ColCheckCounter}";
-                Button CheckedButton = MainGrid.FindName(CheckedButtonName) as Button;
-
-                if (CheckedButton.Content == p_ClickedButton.Content)
-                {
-                    WinConditionCounter++;
-                    if (WinConditionCounter == WinCondition)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    WinConditionCounter = 0;
-                }
-
-                RowCheckCounter--;
-                ColCheckCounter++;
-            }
-            return false;
-        }
-
     }
 }

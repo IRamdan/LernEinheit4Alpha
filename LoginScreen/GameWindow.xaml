@@ -11,7 +11,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Window.Background>
-        <ImageBrush ImageSource="C:\Users\RAMDAN\OneDrive - zubIT\Bilder\Hintergrund gameboard.jpg"/>
+        <ImageBrush ImageSource="C:\Users\RAMDAN\Downloads\backgroundepic2.jpg"/>
     </Window.Background>
 
     <Grid>

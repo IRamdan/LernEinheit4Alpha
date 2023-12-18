@@ -87,6 +87,5 @@ namespace LoginScreen
         {
 
         }
-
-}
+    }
 }
