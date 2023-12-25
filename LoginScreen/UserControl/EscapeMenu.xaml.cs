@@ -54,11 +54,7 @@ namespace LoginScreen
         {
             Button EscapeButton = new Button();
             EscapeButton.Content = p_Content;
-            EscapeButton.Foreground = Brushes.White;
-            EscapeButton.Height = 50;
-            EscapeButton.Width = 300;
-            EscapeButton.FontSize = 24;
-            EscapeButton.Margin = new Thickness(10);
+            EscapeButton.Style = (Style)FindResource("MainMenuButton");
 
             EscapeButton.Click += (sender, e) =>
             {

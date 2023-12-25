@@ -28,7 +28,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ContentControl x:Name="Maincontent" Grid.RowSpan="3" Grid.ColumnSpan="3"/>
-        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" x:Name="OverlayGrid" Background="#80000000" Visibility="Collapsed">
+        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" x:Name="OverlayGrid" Background="Black" Opacity="0.8" Visibility="Collapsed">
             <ContentControl x:Name="escapeMenu"></ContentControl>
         </Grid>
 

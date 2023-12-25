@@ -47,25 +47,28 @@ namespace LoginScreen
 
         public void DisplayPlayerName()
         {
+            
+            Leftside.Children.Add(CreateTextBlock("Player 1:", CurrentPlayer.Sign == Players[0].Sign, 40));
+            Leftside.Children.Add(CreateTextBlock(Players[0].Name, CurrentPlayer.Sign == Players[0].Sign, 0));
 
-            Leftside.Children.Add(CreateTextBlock("Player 1:", CurrentPlayer.Sign == Players[0].Sign));
-            Leftside.Children.Add(CreateTextBlock(Players[0].Name, CurrentPlayer.Sign == Players[0].Sign));
-
-            Rightside.Children.Add(CreateTextBlock("Player 2:", CurrentPlayer.Sign == Players[1].Sign));
-            Rightside.Children.Add(CreateTextBlock(Players[1].Name, CurrentPlayer.Sign == Players[1].Sign));
+            Rightside.Children.Add(CreateTextBlock("Player 2:", CurrentPlayer.Sign == Players[1].Sign, 40));
+            Rightside.Children.Add(CreateTextBlock(Players[1].Name, CurrentPlayer.Sign == Players[1].Sign, 0));
         }
 
-        private TextBlock CreateTextBlock(string text, bool isCurrentPlayer)
+        private TextBlock CreateTextBlock(string p_Text, bool p_IsCurrentPlayer, int p_Margin)
         {
-            var textBlock = new TextBlock
+            var TextBlock = new TextBlock
             {
-                Text = text,
-                FontSize = 64,
+                Text = p_Text,
+                Style = (Style)Resources["NameHolder"],
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = isCurrentPlayer ? Brushes.White : Brushes.LightGray
+                VerticalAlignment = VerticalAlignment.Top,
+                FontSize = 64,
+                Margin = new Thickness(0, p_Margin,0,0),
+                Foreground = p_IsCurrentPlayer ? Brushes.Violet : Brushes.White
             };
-            return textBlock;
+            
+            return TextBlock;
         }
 
         private void CreateGameBoard(int p_Rows, int p_Columns)
