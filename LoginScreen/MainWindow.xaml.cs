@@ -2,6 +2,7 @@
 using LoginScreen.TicTacToe;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,7 @@ namespace LoginScreen
         {
             InitializeComponent();
             Players = new List<Player>();
+            ShowLoginUserControl();
         }
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -42,45 +44,11 @@ namespace LoginScreen
             this.WindowState = WindowState.Minimized;
         }
 
-        public Player InitiatePlayer(int p_PlayerIdent, string p_Name, string p_Sign )
+        private void ShowLoginUserControl()
         {
-            Player Player = new Player();
-            Player.PlayerIdent = p_PlayerIdent;
-            Player.Name = p_Name;
-            Player.Sign = p_Sign;
-            return Player;
-
+            LoginPlayerUserControl loginControl = new LoginPlayerUserControl();
+            ContentControl.Content = loginControl;
         }
-
-        public void LoginButton_Click(Object sender, RoutedEventArgs e)
-        {
-            string Username = NicknameTextBox.Text;
-            string Password = PasswordBox.Password;
-
-            if (Username == "Ismail" && Password == "1234")
-            {
-                Players.Add(InitiatePlayer(1,"Ismail","X"));
-                Players.Add(InitiatePlayer(2, "Guest", "O"));
-                GameWindow gameWindow = new GameWindow(Players);
-                gameWindow.Show();
-                this.Close();
-            }
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri.AbsoluteUri}") { CreateNoWindow = true });
-                e.Handled = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unable to open link: {ex.Message}");
-            }
-        }
-
-
 
     }
 }

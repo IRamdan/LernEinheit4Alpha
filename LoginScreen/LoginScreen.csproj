@@ -9,16 +9,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\BackgroundGameWindow.png" />
+    <None Remove="Images\Extremgame Logo.png" />
+    <None Remove="Images\NeonButtonOffnew.png" />
+    <None Remove="Images\NeonButtonOnnew.png" />
+    <None Remove="Images\Robokönig 1.png" />
+    <None Remove="Images\Robokönig 2.png" />
     <None Remove="SplashScreen1.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Extremgame Logo.ico" />
+    <Content Include="Images\BackgroundGameWindow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Extremgame Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NeonButtonOffnew.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NeonButtonOnnew.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Robokönig 1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Robokönig 2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
   <ItemGroup>

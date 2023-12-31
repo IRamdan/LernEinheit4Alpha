@@ -26,30 +26,8 @@
             </Button>
         </StackPanel>
 
+        <ContentControl Name="ContentControl" Grid.Row="1">
+        </ContentControl>
 
-        <Grid Grid.Row="1">
-            <StackPanel Margin="20">
-                <Image Source="C:\Users\RAMDAN\OneDrive - zubIT\Bilder\Extremgame Logo.png" Height="180" Margin="0,0,0,60"></Image>
-                
-                <TextBox x:Name="NicknameTextBox" Margin="0,0,0,30"
-                         Width="255"
-                         Style="{DynamicResource MaterialDesignOutlinedTextBox}"
-                         materialDesign:HintAssist.Hint="Nickname"
-                         materialDesign:TextFieldAssist.HasClearButton="True"/>
-                
-                <PasswordBox x:Name="PasswordBox"
-                             Style="{DynamicResource MaterialDesignOutlinedRevealPasswordBox}"
-                             Width="255"
-                             Margin="0,0,0,60"
-                             materialDesign:HintAssist.Hint="Password"/>
-                <Button  Width="255" Style="{DynamicResource MaterialDesignRaisedButton }" Click="LoginButton_Click" IsDefault="True" Content="Login"/>
-                <TextBlock HorizontalAlignment="Center" Width="255" Margin="0,10,0,0">
-                    Are you new to Extreme Games? - 
-                    <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://www.youtube.com/watch?v=xvFZjo5PgG0">
-                    Sign up    
-                    </Hyperlink>
-                </TextBlock>
-            </StackPanel>
-        </Grid>
     </Grid>
 </Window>
