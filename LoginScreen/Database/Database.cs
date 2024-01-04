@@ -23,7 +23,6 @@ namespace LoginScreen
                     CreatePlayerAccount.CommandType = CommandType.StoredProcedure;
                     CreatePlayerAccount.Parameters.AddWithValue("@p_Nickname", p_Nickname);
                     CreatePlayerAccount.Parameters.AddWithValue("@p_Password", p_Password);
-
                     CreatePlayerAccount.ExecuteNonQuery();
                     Player NewPlayerAccount = new Player()
                     {
@@ -68,9 +67,11 @@ namespace LoginScreen
 
             return Password;
         }
-        
-        internal static void ShowLeaderBoard()
+
+        public static List<LeaderBoardData> ShowLeaderBoard()
         {
+            List<LeaderBoardData> leaderboardDataList = new List<LeaderBoardData>();
+
             using (SqlConnection Connection = new SqlConnection(ConnectionString))
             {
                 Connection.Open();
@@ -80,11 +81,6 @@ namespace LoginScreen
                 {
                     SqlDataReader Reader = ShowLeaderBoardCommand.ExecuteReader();
 
-                    string Seperator = "====================================";
-                    Console.WriteLine(Seperator);
-                    Console.WriteLine(Seperator + "\n");
-                    Console.WriteLine("  Platz  |  Benutzername |  Punkte  ");
-
                     int Place = 0;
                     while (Reader.Read())
                     {
@@ -92,57 +88,51 @@ namespace LoginScreen
                         int Points = Convert.ToInt32(Reader["Points"]);
                         Place++;
 
-                        ConsoleColor Color = Place % 2 == 0 ? ConsoleColor.Yellow : ConsoleColor.Cyan;
-                        Console.ForegroundColor = Color;
-                        Console.WriteLine($"    {Place,-5}|     {PlayerName,-10}|   {Points,-11}");
-                        Console.ResetColor();
+                        leaderboardDataList.Add(new LeaderBoardData
+                        {
+                            NickName = PlayerName,
+                            Score = Points.ToString(),
+                            Rank = Place.ToString()
+                        });
                     }
                 }
             }
+
+            return leaderboardDataList;
         }
 
-        internal static void ShowPlayerGameStats()
+        internal static List<PlayerStats> GetPlayerGameStats(string nickname)
         {
-            Console.Write("Geben Sie den Nicknamen des Spielers ein: ");
-            string Nickname = Console.ReadLine();
-            Console.Clear();
+            List<PlayerStats> playerStatsList = new List<PlayerStats>();
 
-            using (SqlConnection Connection = new SqlConnection(ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                Connection.Open();
-                string SelectedPlayerGamestate = $"SELECT * FROM [dbo].[PlayerGameStats] WHERE Nickname like '{Nickname}'";
+                connection.Open();
+                string selectedPlayerGameState = $"SELECT * FROM [dbo].[PlayerGameStats] WHERE Nickname like '{nickname}'";
 
-                using (SqlCommand ShowPlayerGameStatsCommand = new SqlCommand(SelectedPlayerGamestate, Connection))
+                using (SqlCommand showPlayerGameStatsCommand = new SqlCommand(selectedPlayerGameState, connection))
                 {
-                    SqlDataReader Reader = ShowPlayerGameStatsCommand.ExecuteReader();
+                    SqlDataReader reader = showPlayerGameStatsCommand.ExecuteReader();
 
-                    string Seperator = "===================================================================================================================";
-
-                    if (Reader.HasRows)
+                    while (reader.Read())
                     {
-                        Console.WriteLine(Seperator);
-                        Console.WriteLine(Seperator);
-                        Console.WriteLine("  Player Name |  Total Games  |  Total Wins  |  Total Losses  |  Unfinished Games  |  Total Draws  | SuccesRate");
-
-                        while (Reader.Read())
+                        PlayerStats playerStats = new PlayerStats
                         {
-                            int TotalGames = ConvertField<int>(Reader["TotalGames"]);
-                            int TotalWins = ConvertField<int>(Reader["TotalWins"]);
-                            int TotalLosses = ConvertField<int>(Reader["TotalLosses"]);
-                            int TotalUnfinishedGames = ConvertField<int>(Reader["TotalUnfinishedGames"]);
-                            int TotalDraws = ConvertField<int>(Reader["TotalDraws"]);
-                            decimal SuccessRate = ConvertField<decimal>(Reader["SuccessRate"]);
-                            ConsoleColor color = ConsoleColor.Cyan;
-                            Console.ForegroundColor = color;
-                            Console.WriteLine($" {Nickname,-11}  |  {TotalGames,-11}  |  {TotalWins,-10}  |  {TotalLosses,-12}  |  {TotalUnfinishedGames,-16}  |  {TotalDraws,-12} | {SuccessRate,-12} %");
-                            Console.ResetColor();
-                        }
-                    }
-                    else
-                    {
+                            Nickname = nickname,
+                            TotalGames = Convert.ToInt32(reader["TotalGames"]),
+                            TotalWins = Convert.ToInt32(reader["TotalWins"]),
+                            TotalLosses = Convert.ToInt32(reader["TotalLosses"]),
+                            TotalUnfinishedGames = Convert.ToInt32(reader["TotalUnfinishedGames"]),
+                            TotalDraws = Convert.ToInt32(reader["TotalDraws"]),
+                            SuccessRate = Convert.ToDecimal(reader["SuccessRate"])
+                        };
+
+                        playerStatsList.Add(playerStats);
                     }
                 }
             }
+
+            return playerStatsList;
         }
         internal static void CreateGameTableEntry(GameType p_GameType, int p_Rows, int p_Columns, int p_WinCondition)
         {

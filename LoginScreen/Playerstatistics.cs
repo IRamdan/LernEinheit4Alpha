@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LoginScreen
 {
-    public class TestPlayer
+    public class Playerstatistics
     {
         public string NickName { get; set; }
         public string TotalGames { get; set; }
@@ -16,7 +16,7 @@ namespace LoginScreen
         public string UnfinishedGames { get; set; }
         public string Successrate { get; set; }
 
-        public TestPlayer(string p_NickName, string p_TotalGames, string p_Wins, string p_Losses, string p_Draws, string p_UnfinishedGames, string p_Successrate)
+        public Playerstatistics(string p_NickName, string p_TotalGames, string p_Wins, string p_Losses, string p_Draws, string p_UnfinishedGames, string p_Successrate)
         {
             NickName = p_NickName;
             TotalGames = p_TotalGames;
