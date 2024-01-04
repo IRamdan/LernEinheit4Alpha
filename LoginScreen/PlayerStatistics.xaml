@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LoginScreen"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="Input Text" Height="500" Width="600"
+        Title="Input Text" Height="250" Width="1200"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
 
@@ -24,11 +24,30 @@
             <TextBlock Foreground="White" Width="Auto" Background="#007ac1" TextAlignment="Center" VerticalAlignment="Center" Text="Playerstatistics" FontSize="36"/>
         </Border>
 
-        <Grid Name="PlayerStatisticsBoard" Grid.Row="1"></Grid>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <ListView HorizontalAlignment="Center" FontSize="14" Name="PlayerStats" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Nickname" DisplayMemberBinding="{Binding Nickname}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn Header="Total Games" DisplayMemberBinding="{Binding TotalGames}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn Header="Wins" DisplayMemberBinding="{Binding TotalWins}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn Header="Losses" DisplayMemberBinding="{Binding TotalLosses}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn Header="Draws" DisplayMemberBinding="{Binding TotalDraws}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn Header="Unfinished Games" DisplayMemberBinding="{Binding TotalUnfinishedGames}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn Header="Succesrate" DisplayMemberBinding="{Binding SuccessRate}" Width="Auto"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" >
+                        <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </StackPanel>
 
         <Grid Grid.Row="2">
             <Button Name="Close" Foreground="White" Background="#007ac1" Content="Close" Click="CloseButton_Click" HorizontalAlignment="Center"></Button>
         </Grid>
-
     </Grid>
 </Window>

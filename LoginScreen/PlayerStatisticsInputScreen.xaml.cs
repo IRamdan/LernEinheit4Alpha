@@ -25,17 +25,18 @@ namespace LoginScreen
         public void ConfirmButton_Click(Object sender, RoutedEventArgs e)
         {
             string EnteredText = InputTextBox.Text;
+            List<PlayerStats> PlayerStats = Database.GetPlayerGameStats(EnteredText);
 
-            if(EnteredText == "Ismail")
-            {
-                PlayerStatistics PlayerStatistics = new PlayerStatistics();
-                this.Close();   
-                PlayerStatistics.Show();
-            }
-            else
+            if(PlayerStats == null)
             {
                 MessageBox.Show("Player not found");
                 this.Close();
+            }
+            else
+            {
+                PlayerStatistics PlayerStatistics = new PlayerStatistics(EnteredText);
+                this.Close();   
+                PlayerStatistics.Show();
             }
         }
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

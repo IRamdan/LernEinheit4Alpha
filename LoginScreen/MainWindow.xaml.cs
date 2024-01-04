@@ -2,8 +2,11 @@
 using LoginScreen.TicTacToe;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Printing;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,64 +26,50 @@ namespace LoginScreen
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal List<Player> Players { get; set; }
+        public List<Player> Players = new List<Player>();
         public MainWindow()
         {
             InitializeComponent();
             Players = new List<Player>();
+
+            ShowLoginPlayer1();
+
         }
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
         }
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        public void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        private void MinimizeButton_Click(Object sender, RoutedEventArgs e)
+        public void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
         }
 
-        public Player InitiatePlayer(int p_PlayerIdent, string p_Name, string p_Sign )
+        public void LoadUserControl(UserControl p_UserControl)
         {
-            Player Player = new Player();
-            Player.PlayerIdent = p_PlayerIdent;
-            Player.Name = p_Name;
-            Player.Sign = p_Sign;
-            return Player;
-
+            ContentControl.Content = p_UserControl;
         }
 
-        public void LoginButton_Click(Object sender, RoutedEventArgs e)
+        public void ShowCreatePlayerAccount(object sender, RoutedEventArgs e)
         {
-            string Username = NicknameTextBox.Text;
-            string Password = PasswordBox.Password;
-
-            if (Username == "Ismail" && Password == "1234")
-            {
-                Players.Add(InitiatePlayer(1,"Ismail","X"));
-                Players.Add(InitiatePlayer(2, "Guest", "O"));
-                GameWindow gameWindow = new GameWindow(Players);
-                gameWindow.Show();
-                this.Close();
-            }
+            CreatePlayerAccount CreatePlayerAccount = new CreatePlayerAccount();
+            LoadUserControl(CreatePlayerAccount);
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        public void ShowLoginPlayer1()
         {
-            try
-            {
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri.AbsoluteUri}") { CreateNoWindow = true });
-                e.Handled = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unable to open link: {ex.Message}");
-            }
+            LoginPlayer1 LoginPlayer1 = new LoginPlayer1();
+            LoadUserControl(LoginPlayer1);
         }
 
-
+        public void ShowLoginPlayer2()
+        {
+            LoginPlayer2 LoginPlayer2 = new LoginPlayer2(Players);
+            LoadUserControl(LoginPlayer2);
+        }
 
     }
 }

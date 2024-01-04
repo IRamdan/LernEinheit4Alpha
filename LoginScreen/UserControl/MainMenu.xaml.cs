@@ -32,10 +32,10 @@ namespace LoginScreen
 
         public void LeaderBoardButton_Click(Object sender, RoutedEventArgs e)
         {
-            GameWindow window = Window.GetWindow(this) as GameWindow;
-            if (window != null)
+            GameWindow GameWindow = Window.GetWindow(this) as GameWindow;
+            if (GameWindow != null)
             {
-                window.LoadControl(new LeaderBoard());
+                GameWindow.LoadControl(new LeaderBoard());
             }
         }
 
@@ -67,25 +67,32 @@ namespace LoginScreen
 
         private void TicTacToe_Click(object sender, RoutedEventArgs e)
         {
-            GameWindow window = Window.GetWindow(this) as GameWindow;
-            if (window != null)
+            GameWindow GameWindow = Window.GetWindow(this) as GameWindow;
+            if (GameWindow != null)
             {
-                window.LoadControl(new TicTacToeUC(Players));
+                GameWindow.LoadControl(new TicTacToeUC(Players));
             }
         }
 
         private void ConnectFour_Click(object sender, RoutedEventArgs e)
         {
-            GameWindow window = Window.GetWindow(this) as GameWindow;
-            if (window != null)
+            GameWindow GameWindow = Window.GetWindow(this) as GameWindow;
+            if (GameWindow != null)
             {
-                window.LoadControl(new ConnectFourUC());
+                GameWindow.LoadControl(new ConnectFourUC());
             }
         }
 
-        private void SecondPlayerButton_Click(object sender, RoutedEventArgs e)
+        public void SecondPlayerButton_Click(object sender, RoutedEventArgs e)
         {
-
+            
+            LoginPlayer2 LoginPlayer2 = new LoginPlayer2(Players);
+            MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
+            if (MainWindow != null) {
+                MainWindow.ContentControl.Content = LoginPlayer2;
+            }
+            MainWindow.ContentControl.Content = LoginPlayer2;
+            MainWindow.Visibility = Visibility.Visible;
         }
     }
 }
