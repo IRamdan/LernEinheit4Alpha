@@ -64,6 +64,7 @@
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Foreground" Value="Red"/>
+                        <Setter Property="TextBlock.Foreground" Value="Red"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>

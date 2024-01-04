@@ -11,7 +11,7 @@ namespace LoginScreen
 {
     public class Database
     {
-        internal static string ConnectionString = "Data Source=zub-PC143\\SQLEXPRESS;" + "Initial Catalog=Lerneinheit3;" + "User ID=Peter;" + "Password=1234;";
+        internal static string ConnectionString = "Data Source=zub-PC143\\SQLEXPRESS;" + "Initial Catalog=Lerneinheit3;" + "User ID=Peter;" + "Password=75WFjCG8pPq.eGB;";
         private static T ConvertField<T>(object field) => (field == null || field == DBNull.Value) ? default : (T)Convert.ChangeType(field, typeof(T));
         internal static Player CreatePlayerAccount(string p_Nickname, string p_Password)
         {
@@ -25,8 +25,6 @@ namespace LoginScreen
                     CreatePlayerAccount.Parameters.AddWithValue("@p_Password", p_Password);
 
                     CreatePlayerAccount.ExecuteNonQuery();
-                    Console.Clear();
-                    Console.WriteLine("Konto erfolgreich erstellt.");
                     Player NewPlayerAccount = new Player()
                     {
                         Name = p_Nickname,
@@ -70,37 +68,7 @@ namespace LoginScreen
 
             return Password;
         }
-        private static string WritePasswordAsStars()
-        {
-            string Password = "";
-            ConsoleKeyInfo Key;
-            do
-            {
-                Key = Console.ReadKey(true);
-
-                if (Key.Key == ConsoleKey.Enter)
-                {
-                    break;
-                }
-                else if (Key.Key == ConsoleKey.Backspace)
-                {
-                    if (Password.Length > 0)
-                    {
-                        Password = Password.Remove(Password.Length - 1);
-                        Console.Write("\b \b");
-                    }
-                }
-                else
-                {
-                    Password += Key.KeyChar;
-                    Console.Write("*");
-                }
-            } while (true);
-
-            Console.WriteLine();
-
-            return Password;
-        }
+        
         internal static void ShowLeaderBoard()
         {
             using (SqlConnection Connection = new SqlConnection(ConnectionString))
@@ -132,6 +100,7 @@ namespace LoginScreen
                 }
             }
         }
+
         internal static void ShowPlayerGameStats()
         {
             Console.Write("Geben Sie den Nicknamen des Spielers ein: ");
@@ -215,11 +184,11 @@ namespace LoginScreen
             }
             return MatchID;
         }
-        internal static Player LoginPlayerAccount(string p_Nickname = null, string p_Password = null)
+        internal static bool LoginPlayerAccount(string p_Nickname = null, string p_Password = null)
         {
-            Player Player = null;
             string Nickname = p_Nickname;
             string Password = p_Password;
+            bool IsPlayerLoggedIn = false;
 
             using (SqlConnection Connection = new SqlConnection(ConnectionString))
             {
@@ -230,21 +199,16 @@ namespace LoginScreen
                     Login.Parameters.AddWithValue("@nickname", Nickname);
                     Login.Parameters.AddWithValue("@password", Password);
 
-                    var Result = (int)Login.ExecuteScalar();
-                    if (Result == 1)
+                    object Result = Login.ExecuteScalar();
+
+                    if(Result != null && Result != DBNull.Value && (int)Result == 1)
                     {
-                        Console.WriteLine("Anmeldung erfolgreich!");
-                        Console.Clear();
+                        IsPlayerLoggedIn = true;
                     }
-                    else
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Anmeldung fehlgeschlagen. Überprüfen Sie Ihren Benutzernamen und Ihr Passwort.");
-                    }
+                    
                 }
             }
-
-            return Player;
+            return IsPlayerLoggedIn;
         }
         internal static void AddPlayerToPlayerMatch(List<Player> p_Players)
         {

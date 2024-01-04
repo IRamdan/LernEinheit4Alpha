@@ -56,7 +56,7 @@
             </StackPanel>
             <Button Style="{DynamicResource MainMenuButton}" Click="PlayerstatisticsButton_Click" Content="Playerstatistics" ></Button>
             <Button Style="{DynamicResource MainMenuButton}" Click="LeaderBoardButton_Click" Content="LeaderBoard" ></Button>
-            <Button Style="{DynamicResource MainMenuButton}" Click="SecondPlayerButton_Click" Content="Login Player 2" ></Button>
+            <Button x:Name="SecondPlayerLoginButton" Style="{DynamicResource MainMenuButton}" Click="SecondPlayerButton_Click" Content="Login Player 2" ></Button>
         </StackPanel>
 
         <StackPanel Grid.Column="2">

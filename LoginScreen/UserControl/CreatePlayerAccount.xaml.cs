@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LoginScreen.TicTacToe;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace LoginScreen
 {
     public partial class CreatePlayerAccount : UserControl
     {
+        MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
+
         public CreatePlayerAccount()
         {
             InitializeComponent();
@@ -26,6 +29,10 @@ namespace LoginScreen
         {
             string Nickname = NicknameTextBox.Text;
             string Password = PasswordBox.Password;
+
+            Player NewPlayerAccount = Database.CreatePlayerAccount(Nickname, Password);
+            LoginPlayer1 LoginPlayer1 = new LoginPlayer1();
+            MainWindow.ContentControl.Content = LoginPlayer1;
         }
     }
 }

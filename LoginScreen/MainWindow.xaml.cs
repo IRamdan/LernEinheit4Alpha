@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Printing;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,30 +26,49 @@ namespace LoginScreen
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal List<Player> Players { get; set; }
+        public List<Player> Players = new List<Player>();
         public MainWindow()
         {
             InitializeComponent();
             Players = new List<Player>();
-            ShowLoginUserControl();
+
+            ShowLoginPlayer1();
+
         }
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
         }
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        public void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        private void MinimizeButton_Click(Object sender, RoutedEventArgs e)
+        public void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
         }
 
-        private void ShowLoginUserControl()
+        public void LoadUserControl(UserControl p_UserControl)
         {
-            LoginPlayerUserControl loginControl = new LoginPlayerUserControl();
-            ContentControl.Content = loginControl;
+            ContentControl.Content = p_UserControl;
+        }
+
+        public void ShowCreatePlayerAccount(object sender, RoutedEventArgs e)
+        {
+            CreatePlayerAccount CreatePlayerAccount = new CreatePlayerAccount();
+            LoadUserControl(CreatePlayerAccount);
+        }
+
+        public void ShowLoginPlayer1()
+        {
+            LoginPlayer1 LoginPlayer1 = new LoginPlayer1();
+            LoadUserControl(LoginPlayer1);
+        }
+
+        public void ShowLoginPlayer2()
+        {
+            LoginPlayer2 LoginPlayer2 = new LoginPlayer2(Players);
+            LoadUserControl(LoginPlayer2);
         }
 
     }

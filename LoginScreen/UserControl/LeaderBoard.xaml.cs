@@ -16,9 +16,7 @@ using System.Windows.Shapes;
 
 namespace LoginScreen
 {
-    /// <summary>
-    /// Interaktionslogik für LeaderBoard.xaml
-    /// </summary>
+
     public partial class LeaderBoard : UserControl
     {
         public LeaderBoard()
@@ -27,14 +25,15 @@ namespace LoginScreen
             LoadLeaderboardTestData();
         }
 
-   
+
         private void LoadLeaderboardTestData()
         {
             Random random = new Random();
 
             List<TestData> TestDatas = new List<TestData>
         {
-            new TestData { NickName = "Ismail", Score = (random.Next(9000, 10000)).ToString(), Rank = "1" },
+
+            new TestData { NickName = "Ismail", Score = (random.Next(9500, 10000)).ToString(), Rank = "1" },
             new TestData { NickName = "SayMyName", Score = (random.Next(8000, 9500)).ToString(), Rank = "2" },
             new TestData { NickName = "HereWeGo", Score = (random.Next(7000, 7800)).ToString(), Rank = "3" },
             new TestData { NickName = "TheOneWhoKnocks", Score = (random.Next(4000, 5000)).ToString(), Rank = "4" },
@@ -64,7 +63,7 @@ namespace LoginScreen
             new TestData { NickName = "SomeOne", Score = (random.Next(2, 3)).ToString(), Rank = "28" },
             new TestData { NickName = "NoOne", Score = (random.Next(1, 2)).ToString(), Rank = "29" },
             new TestData { NickName = "Messi", Score = (random.Next(0, 1)).ToString(), Rank = "30" }
-        };
+            };
             LeaderBoardView.ItemsSource = TestDatas;
         }
     }
